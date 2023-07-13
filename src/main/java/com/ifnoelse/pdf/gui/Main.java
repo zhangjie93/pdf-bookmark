@@ -2,17 +2,17 @@ package com.ifnoelse.pdf.gui;
 
 import com.ifnoelse.pdf.PDFContents;
 import com.ifnoelse.pdf.PDFUtil;
+import com.ifnoelse.pdf.util.ResourceBundleUtil;
 import com.itextpdf.text.exceptions.BadPasswordException;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.Dragboard;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -86,6 +86,9 @@ public class Main extends Application {
             }
         });
 
+
+        setMenu(primaryStage,topPane,filePath);
+
         vBox.setCenter(textArea);
 
 
@@ -100,8 +103,6 @@ public class Main extends Application {
             if (file != null) {
                 filePath.setText(file.getPath());
             }
-
-
         });
 
 
@@ -111,7 +112,6 @@ public class Main extends Application {
                 if (offset != null && offset.length() > 0 && !offset.matches("[0-9]+")) {
                     showDialog("错误", "偏移量设置错误", "页码偏移量只能为整数", Alert.AlertType.ERROR);
                 }
-
             }
         });
 
@@ -148,8 +148,6 @@ public class Main extends Application {
             } else {
                 showDialog("错误", "目录内容为空", "目录能容不能为空,请填写pdf书籍目录url或者填入目录文本", Alert.AlertType.ERROR);
             }
-
-
         });
         primaryStage.show();
     }
@@ -160,5 +158,66 @@ public class Main extends Application {
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.show();
+    }
+
+    private void setMenu(Stage primaryStage, BorderPane root,TextField filePath){
+        MenuBar menuBar = new MenuBar();
+        menuBar.prefWidthProperty().bind(primaryStage.widthProperty());
+        root.setTop(menuBar);
+
+
+        // File menu -  save, exit
+        Menu fileMenu = new Menu(ResourceBundleUtil.getResourceWithKey("gui.file"));
+
+        MenuItem openMenuItem = new MenuItem("Open");
+        MenuItem exitMenuItem = new MenuItem("Exit");
+        exitMenuItem.setOnAction(actionEvent -> Platform.exit());
+        openMenuItem.setOnAction(actionEvent ->{
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("pdf", "*.pdf"));
+            File file = fileChooser.showOpenDialog(null);
+            if (file != null) {
+                filePath.setText(file.getPath());
+            }
+        });
+
+        fileMenu.getItems().addAll( openMenuItem,
+                new SeparatorMenuItem(), exitMenuItem);
+
+
+
+        Menu settingMenu = new Menu(ResourceBundleUtil.getResourceWithKey("gui.settings"));
+//        CheckMenuItem htmlMenuItem = new CheckMenuItem("HTML");
+//        htmlMenuItem.setSelected(true);
+//        settingMenu.getItems().add(htmlMenuItem);
+//
+//        CheckMenuItem cssMenuItem = new CheckMenuItem("CSS");
+//        cssMenuItem.setSelected(true);
+//        settingMenu.getItems().add(cssMenuItem);
+//
+//        Menu sqlMenu = new Menu("SQL");
+//        ToggleGroup tGroup = new ToggleGroup();
+//        RadioMenuItem mysqlItem = new RadioMenuItem("MySQL");
+//        mysqlItem.setToggleGroup(tGroup);
+//
+//        RadioMenuItem oracleItem = new RadioMenuItem("Oracle");
+//        oracleItem.setToggleGroup(tGroup);
+//        oracleItem.setSelected(true);
+//
+//        sqlMenu.getItems().addAll(mysqlItem, oracleItem,
+//                new SeparatorMenuItem());
+//
+//        Menu tutorialManeu = new Menu("Tutorial");
+//        tutorialManeu.getItems().addAll(
+//                new CheckMenuItem("Java"),
+//                new CheckMenuItem("JavaFX"),
+//                new CheckMenuItem("Swing"));
+
+//        sqlMenu.getItems().add(tutorialManeu);
+
+        menuBar.getMenus().addAll(fileMenu, settingMenu);
+
+
+
     }
 }

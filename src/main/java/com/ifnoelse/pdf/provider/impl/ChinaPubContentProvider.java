@@ -1,5 +1,6 @@
-package com.ifnoelse.pdf;
+package com.ifnoelse.pdf.provider.impl;
 
+import com.ifnoelse.pdf.provider.ContentsProvider;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 

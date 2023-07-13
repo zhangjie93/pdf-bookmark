@@ -1,5 +1,8 @@
 package com.ifnoelse.pdf;
 
+import com.ifnoelse.pdf.provider.ContentsProvider;
+import com.ifnoelse.pdf.provider.impl.ChinaPubContentProvider;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
